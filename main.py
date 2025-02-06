@@ -55,7 +55,7 @@ def populate_table():
     for row in rows:
         tree.insert("", tk.END, values=row)
 
-#Delete Client Window
+#Delete Client Window - obselete
 def open_delete_window():
     delete_window = tk.Toplevel(root)
     delete_window.title("Delete Client")
@@ -97,6 +97,43 @@ def open_delete_window():
 
     tk.Button(delete_window, text="Delete", command=delete_client).pack()
 
+def delete_client():
+        curItem = tree.focus()
+        print(tree.item(curItem).get('values')[0])
+        table_index = tree.item(curItem).get('values')[0]
+
+        client_id = table_index
+        conn = sqlite3.connect("clients.db")
+        cursor = conn.cursor()
+
+
+        cursor.execute("SELECT * FROM clients WHERE id=?", (client_id,))
+        result = cursor.fetchone()
+
+        if result:
+            confirm = messagebox.askyesno("Confirm", f"Are you sure you want to delete Client ID {client_id}?")
+            if confirm:
+                # Important code below: Executes the SQL command on the database
+                cursor.execute("DELETE FROM clients WHERE (id) = (?)", (client_id,))
+                conn.commit()
+                messagebox.showinfo("Success", "Client Deleted Successfully")
+                populate_table()
+            else:
+                messagebox.showinfo("Canceled", "Deletion Canceled")
+        else:
+            messagebox.showinfo("Error", "Client ID Not Found")
+        conn.close()
+
+
+
+#function that'll help me select table item
+def selected_item(a):
+    curItem = tree.focus()
+    print(tree.item(curItem).get('values')[0])
+    table_index = tree.item(curItem).get('values')[0]
+    return int(table_index)
+
+
 #GUI Setup
 root = tk.Tk()
 root.title('Client Database')
@@ -104,7 +141,6 @@ root.geometry(f"900x600")
 
 frame = tk.Frame(root)
 frame.pack(pady=10)
-
 
 tk.Label(frame, text="Name:").grid(row=0, column=0)
 name_entry = tk.Entry(frame)
@@ -119,7 +155,7 @@ phone_entry = tk.Entry(frame)
 phone_entry.grid(row=2, column=1,padx=5, pady=5)
 
 tk.Button(frame,text="Add Client", command=add_client).grid(row=3, column=0,columnspan=2, pady=10)
-tk.Button(frame,text="Delete Client", command=open_delete_window).grid(row=4, column=0,columnspan=2, pady=10)
+tk.Button(frame,text="Delete Client", command=delete_client).grid(row=4, column=0,columnspan=2, pady=10)
 
 tree_frame = tk.Frame(root)
 tree_frame.pack(pady=10)
@@ -132,6 +168,10 @@ tree.heading("Email", text="Email")
 tree.heading("Phone", text="Phone")
 tree.pack()
 
+#Select Item function call
+
+tree.bind('<ButtonRelease-1>', selected_item)
+t_index = selected_item
 
 
 # Initialize DB and Populate Table
