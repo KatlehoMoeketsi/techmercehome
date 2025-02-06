@@ -10,12 +10,34 @@ from tkinter import messagebox
 def init_db():
     conn = sqlite3.connect("clients.db")
     cursor = conn.cursor()
-    cursor.execute()
+    cursor.execute('''CREATE TABLE IF NOT EXISTS clients (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    email TEXT,
+    phone TEXT)''')
 
     conn.commit()
     conn.close()
 
 #Add Client
+def add_client():
+    name = name_entry.get()
+    email = email_entry.get()
+    phone = phone_entry.get()
+
+    if not name:
+        messagebox.showerror("Error", "Name is required")
+        return
+
+    conn = sqlite3.connect("clients.db")
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO clients (name, email, phone) VALUES (?, ?, ?)", (name,email,phone))
+    conn.commit()
+    conn.close()
+    messagebox.showinfo("Success","Client Added Successfully")
+    name_entry.delete(0,tk.END)
+    email_entry.delete(0, tk.END)
+    phone_entry.delete(0, tk.END)
 
 
 #GUI Setup
@@ -35,7 +57,7 @@ tk.Label(root, text="Phone:").pack()
 phone_entry = tk.Entry(root)
 phone_entry.pack()
 
-tk.Button(root,text="Add Client").pack
+tk.Button(root,text="Add Client", ).pack
 
 init_db()
 
