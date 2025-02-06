@@ -4,8 +4,10 @@
 
 import sqlite3
 import tkinter as tk
+from email.utils import parsedate_to_datetime
 from idlelib.debugger_r import restart_subprocess_debugger
-from tkinter import messagebox
+from tkinter import messagebox, Entry
+
 
 #Setting up the Database
 def init_db():
@@ -85,28 +87,37 @@ def open_delete_window():
 #GUI Setup
 root = tk.Tk()
 root.title('Client Database')
-root.geometry("400x300")
+
+root.positionfrom
+screen_height = root.winfo_screenheight()
+screen_width = root.winfo_screenwidth();
+x = (screen_width - root.winfo_reqwidth()) // 2
+y = (screen_height - root.winfo_reqheight()) // 2
+
+root.geometry(f"400x300+{x}+{y}")
 
 tk.Label(root, text="Name:").grid(row=0, column=1)
 name_entry = tk.Entry(root)
-name_entry.grid(row=1, column=1)
+name_entry.grid(row=0, column=2, padx=5, pady=10)
 
 tk.Label(root, text="Email:").grid(row=2, column=1)
 email_entry = tk.Entry(root)
-email_entry.grid(row=3, column=1)
+email_entry.grid(row=2, column=2, padx=5, pady=10)
 
-tk.Label(root, text="Phone:").grid(row=4, column=1)
+tk.Label(root, text="Phone:").grid(row=3, column=1)
 phone_entry = tk.Entry(root)
-phone_entry.grid(row=5, column=1)
+phone_entry.grid(row=3, column=2,padx=5, pady=10)
 
 
 
-tk.Button(root,text="Add Client", command=add_client).grid(row=6, column=1, padx= 5, pady= 8)
-tk.Button(root,text="Delete Client", command=open_delete_window).grid(row=7, column=1, padx= 5, pady= 8)
+tk.Button(root,text="Add Client", command=add_client).grid(row=6, column=1, sticky="nesw", pady=10)
+tk.Button(root,text="Delete Client", command=open_delete_window).grid(row=7, column=1, sticky="nesw", pady=10)
+
+
+
 
 init_db()
 
 root.mainloop()
-
 
 
