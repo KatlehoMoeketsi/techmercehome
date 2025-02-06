@@ -4,8 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="434982f6-9520-406a-b56f-7bf185530076" name="Changes" comment="Delete function added with call to tkinter window for delete. &#10;Removed pack positioning and used grid instead.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="434982f6-9520-406a-b56f-7bf185530076" name="Changes" comment="Change layout of the tkinter elements">
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -134,7 +133,15 @@
       <option name="project" value="LOCAL" />
       <updated>1738845495794</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Change layout of the tkinter elements">
+      <option name="closed" value="true" />
+      <created>1738851721378</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1738851721378</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -153,6 +160,7 @@
     <MESSAGE value="Initial Code created." />
     <MESSAGE value="Database code and GUI Code added" />
     <MESSAGE value="Delete function added with call to tkinter window for delete. &#10;Removed pack positioning and used grid instead." />
-    <option name="LAST_COMMIT_MESSAGE" value="Delete function added with call to tkinter window for delete. &#10;Removed pack positioning and used grid instead." />
+    <MESSAGE value="Change layout of the tkinter elements" />
+    <option name="LAST_COMMIT_MESSAGE" value="Change layout of the tkinter elements" />
   </component>
 </project>

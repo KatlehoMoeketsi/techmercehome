@@ -7,6 +7,7 @@ import tkinter as tk
 from email.utils import parsedate_to_datetime
 from idlelib.debugger_r import restart_subprocess_debugger
 from tkinter import messagebox, Entry
+from tkinter import ttk
 
 
 #Setting up the Database
@@ -21,6 +22,8 @@ def init_db():
 
     conn.commit()
     conn.close()
+
+#populate Table
 
 #Add Client
 def add_client():
@@ -41,7 +44,6 @@ def add_client():
     name_entry.delete(0,tk.END)
     email_entry.delete(0, tk.END)
     phone_entry.delete(0, tk.END)
-
 
 #Delete Client Window
 def open_delete_window():
@@ -113,11 +115,17 @@ phone_entry.grid(row=3, column=2,padx=5, pady=10)
 tk.Button(root,text="Add Client", command=add_client).grid(row=6, column=1, sticky="nesw", pady=10)
 tk.Button(root,text="Delete Client", command=open_delete_window).grid(row=7, column=1, sticky="nesw", pady=10)
 
-
+#Create Table
+tree = ttk.Treeview(root, columns=("ID", "Name", "Email", "Phone"), show="headings")
+tree.heading("ID", text="ID")
+tree.heading("Name", text="Name")
+tree.heading("Email", text="Email")
+tree.heading("Phone", text="Phone")
+tree.grid(row=5, column = 4, columnspan= 4, padx=10, pady=10)
 
 
 init_db()
-
+populate_table()
 root.mainloop()
 
 
