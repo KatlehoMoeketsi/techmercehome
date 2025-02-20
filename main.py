@@ -28,7 +28,6 @@ ref = db.reference("/")
 print(ref.get())
 
 
-
 #Setting up the Database
 def init_db():
     conn = sqlite3.connect("clients.db")
@@ -81,8 +80,6 @@ def add_client():
         messagebox.showerror("Error", "Name is required")
         return
 
-
-
 def populate_table():
     for row in tree.get_children(): #get_children returns a list of children in the root:
         tree.delete(row)
@@ -107,36 +104,9 @@ def open_delete_window():
     id_entry.pack()
 
 
-    def delete_client():
-        # Get the id from the input
-        client_id = id_entry.get()
-        if not client_id.isdigit():
-            messagebox.showerror("Error", "Please enter a valid numeric ID")
-            return
-
-        conn = sqlite3.connect("clients.db")
-        cursor = conn.cursor()
-
-        # check if client exists
-        cursor.execute("SELECT * FROM clients WHERE id=?", (client_id,))
-        result = cursor.fetchone()
-
-        if result:
-            confirm = messagebox.askyesno("Confirm", f"Are you sure you want to delete Client ID {client_id}?")
-            if confirm:
-                # Important code below: Executes the SQL command on the database
-                cursor.execute("DELETE FROM clients WHERE (id) = (?)", (client_id,))
-                conn.commit()
-                messagebox.showinfo("Success", "Client Deleted Successfully")
-                populate_table()
-            else:
-                messagebox.showisnfo("Canceled", "Deletion Canceled")
-        else:
-            messagebox.showinfo("Error", "Client ID Not Found")
-        conn.close()
-        id_entry.delete(0, tk.END)  # Clear the input
 
     tk.Button(delete_window, text="Delete", command=delete_client).pack()
+
 
 def delete_client():
         curItem = tree.focus()
