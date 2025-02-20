@@ -107,7 +107,7 @@ def open_delete_window():
 
     tk.Button(delete_window, text="Delete", command=delete_client).pack()
 
-
+#Delete Client will now not only delete the SQL record in the local db but also the firebase record.
 def delete_client():
         curItem = tree.focus()
         print(tree.item(curItem).get('values')[0])
