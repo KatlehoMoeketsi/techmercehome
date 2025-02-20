@@ -71,7 +71,8 @@ def add_client():
 
     if is_connected():
         try:
-            database.collection('clients').add(client_data)
+            # database.collection('/clients').add(client_data)
+            db.reference("/clients").push().set(client_data)
             print("Added to firebase!")
         except Exception as e:
             print(f"Error syncing with Firebase: {e}")
