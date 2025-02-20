@@ -8,6 +8,27 @@ from msilib import type_key
 from tkinter import messagebox
 from tkinter import ttk
 
+
+#import required modules for firebase functionality
+import firebase_admin
+import requests
+from firebase_admin import db, credentials,firestore
+
+
+
+cred = credentials.Certificate("credentials.json")
+firebase_admin.initialize_app(cred, {"databaseURL":"https://tm-client-database-default-rtdb.europe-west1.firebasedatabase.app/"})
+database = firestore.client()
+
+
+#creating reference to root node - cursor
+ref = db.reference("/")
+
+#test code, remove later
+print(ref.get())
+
+
+
 #Setting up the Database
 def init_db():
     conn = sqlite3.connect("clients.db")
@@ -16,31 +37,50 @@ def init_db():
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                         name TEXT NOT NULL,
                         email TEXT,
-                        phone TEXT)''')
+                        phone TEXT,
+                        job TEXT)''')
 
     conn.commit()
     conn.close()
 
 #Add Client
 def add_client():
+    client_data = {}
     name = name_entry.get()
     email = email_entry.get()
     phone = phone_entry.get()
+    job = job_entry.get()
+
+    conn = sqlite3.connect("clients.db")
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO clients (name, email, phone, job) VALUES (?, ?, ?, ?)", (name, email, phone, job))
+    conn.commit()
+    messagebox.showinfo("Success", "Client Added Successfully")
+    name_entry.delete(0, tk.END)
+    email_entry.delete(0, tk.END)
+    phone_entry.delete(0, tk.END)
+    job_entry.delete(0, tk.END)
+
+    client_data = {
+        'name' : name,
+        'email':email,
+        'phone':phone,
+        'job':job
+    }
+    populate_table()
+
+    if is_connected():
+        try:
+            database.collection('clients').add(client_data)
+            print("Added to firebase!")
+        except Exception as e:
+            print(f"Error syncing with Firebase: {e}")
 
     if not name:
         messagebox.showerror("Error", "Name is required")
         return
 
-    conn = sqlite3.connect("clients.db")
-    cursor = conn.cursor()
-    cursor.execute("INSERT INTO clients (name, email, phone) VALUES (?, ?, ?)", (name,email,phone))
-    conn.commit()
-    conn.close()
-    messagebox.showinfo("Success","Client Added Successfully")
-    name_entry.delete(0,tk.END)
-    email_entry.delete(0, tk.END)
-    phone_entry.delete(0, tk.END)
-    populate_table()
+
 
 def populate_table():
     for row in tree.get_children(): #get_children returns a list of children in the root:
@@ -124,7 +164,15 @@ def delete_client():
             messagebox.showinfo("Error", "Client ID Not Found")
         conn.close()
 
-
+def is_connected(test_url = "http://www.google.com/", timeout=5):
+    """
+        Returns True if the connection to the test_url is successful, else False.
+        """
+    try:
+        requests.get(test_url, timeout=timeout)
+        return True
+    except requests.ConnectionError:
+        return False
 
 #function that'll help me select table item
 def selected_item(a):
@@ -154,18 +202,23 @@ tk.Label(frame, text="Phone:").grid(row=2, column=0)
 phone_entry = tk.Entry(frame)
 phone_entry.grid(row=2, column=1,padx=5, pady=5)
 
-tk.Button(frame,text="Add Client", command=add_client).grid(row=3, column=0,columnspan=2, pady=10)
-tk.Button(frame,text="Delete Client", command=delete_client).grid(row=4, column=0,columnspan=2, pady=10)
+tk.Label(frame, text="Job:").grid(row=3, column=0)
+job_entry = tk.Entry(frame)
+job_entry.grid(row=3, column=1,padx=5, pady=5)
+
+tk.Button(frame,text="Add Client", command=add_client).grid(row=4, column=0,columnspan=2, pady=10)
+tk.Button(frame,text="Delete Client", command=delete_client).grid(row=5, column=0,columnspan=2, pady=10)
 
 tree_frame = tk.Frame(root)
 tree_frame.pack(pady=10)
 
 #Create Table
-tree = ttk.Treeview(tree_frame, columns=("ID", "Name", "Email", "Phone"), show="headings")
+tree = ttk.Treeview(tree_frame, columns=("ID", "Name", "Email", "Phone","Job"), show="headings")
 tree.heading("ID", text="ID")
 tree.heading("Name", text="Name")
 tree.heading("Email", text="Email")
 tree.heading("Phone", text="Phone")
+tree.heading("Job", text="Job")
 tree.pack()
 
 #Select Item function call
